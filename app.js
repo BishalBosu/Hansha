@@ -5,7 +5,7 @@ const morgan = require("morgan")
 const path = require("path")
 const fs = require("fs")
 const compression = require("compression")
-
+const cors = require("cors")
 
 
 const bodyParser = require("body-parser")
@@ -32,6 +32,12 @@ const accessLogStream = fs.createWriteStream(
 	{flags: 'a'}
 )
 	
+
+app.use(cors({
+	origin: "http://localhost:3009",
+	methods: ["GET", "POST"]
+
+}))
 //passing the middlewares
 app.use(compression());
 app.use(morgan("combined", {stream: accessLogStream}))
