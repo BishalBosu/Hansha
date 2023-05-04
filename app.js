@@ -9,7 +9,7 @@ const compression = require("compression")
 
 
 const bodyParser = require("body-parser")
-//const sequelize = require("./utils/database")
+const sequelize = require("./utils/database")
 
 
 //imported models
@@ -17,7 +17,7 @@ const bodyParser = require("body-parser")
 
 
 //imported routes
-
+const signupRouters = require("./routes/signup");
 
 
 const app = express();
@@ -37,6 +37,8 @@ app.use(compression());
 app.use(morgan("combined", {stream: accessLogStream}))
 
 
+app.use(signupRouters);
+
 app.use((req, res, next)=>{
     res.redirect("/html/signup.html")
 })
@@ -44,12 +46,11 @@ app.use((req, res, next)=>{
 
 
 //sync with sequelize enries
-// sequelize
-// 	.sync()
-// 	.then((result) => {
-//         //either run on PORT variable if not availavail 3006
-// 		app.listen(process.env.PORT || 3009)
-// 	})
-// 	.catch((err) => console.log("DbErroRRR: ", err))
+sequelize
+	.sync()
+	.then((result) => {
+        //either run on PORT variable if not availavail 3006
+		app.listen(process.env.PORT || 3009)
+	})
+	.catch((err) => console.log("DbErroRRR: ", err))
 
-app.listen(process.env.PORT || 3009)
