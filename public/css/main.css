@@ -1,0 +1,11 @@
+.hansha-gradient-text {    
+    width: 50rem;
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(90deg,#49CC5C,rgb(0, 1, 0) 87.19%);
+    -webkit-background-clip: text;
+    
+}
+
+.btn-success{
+    background: linear-gradient(290deg,#095f16,rgb(61, 230, 46) 60%);
+}
