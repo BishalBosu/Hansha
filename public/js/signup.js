@@ -38,6 +38,7 @@ async function registerUser() {
 		try {
 			const user = await axios.post(`${BASE_URL}/signup`, obj)
 			alert(`Hi ${user.data.name}! You are successfully registered try loging in now!`)
+			window.location.href = "/html/login.html";
 		} catch (err) {
 			if (err.response.status == 409) {
 				alert("Email alredy registered! try Login insted!");

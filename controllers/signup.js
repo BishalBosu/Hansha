@@ -1,6 +1,18 @@
 const bcrypt = require("bcrypt")
 const User = require("../models/user")
 const sequelize = require("../utils/database")
+const jwt = require("jsonwebtoken")
+
+
+//gen token function
+function generateAcessToken(email, name, ispremium) {
+	return jwt.sign(
+		{ email: email, name: name, ispremium: ispremium },
+		process.env.TOKEN_PRIVATE_KEY
+	)
+}
+
+
 
 exports.postSignup = async (req, res, next) => {
 	try {
@@ -43,4 +55,42 @@ exports.postSignup = async (req, res, next) => {
 		//res.status(409).json({err: err, message: "User may already exist", success: false})
 		console.log("ssoutside hash signup.js", err)
 	}
+}
+
+
+//for login
+exports.postLogin = async(req, res, next)=>{
+	const email = req.body.email;
+	const pass = req.body.pass;
+
+	try{
+	 const user = await User.findByPk(email)
+	 const hashed_pass = user.password;
+	 const name = user.name;
+	 const ispremium = user.ispremium;
+	 
+
+	 bcrypt.compare(pass, hashed_pass, async (err, result) => {
+		if (err) {
+			console.log("login hash error: ", err)
+			return res.status(500).json({success: false, message: "something went wrong in internal server."})
+		}
+
+		if (result) {
+			const token = generateAcessToken(email, name, ispremium)
+			obj = {
+				email,
+				token,
+			}
+			return res.json(obj)
+		} else {			
+			return res.status(401).json({success: false, message: "password not matched"})
+		}
+	})
+
+	}catch(err){
+		//console.log("login": ,err)
+		return res.status(404).json({success: false, message: "Email not found"})
+	}
+
 }
