@@ -13,11 +13,13 @@ const sequelize = require("./utils/database")
 
 
 //imported models
-
+const User = require("./models/user")
+const Message = require("./models/message")
 
 
 //imported routes
 const signupRouters = require("./routes/signup");
+const messageRouters = require("./routes/message")
 
 
 const app = express();
@@ -45,10 +47,14 @@ app.use(morgan("combined", {stream: accessLogStream}))
 
 app.use(signupRouters);
 
+app.use(messageRouters);
+
 app.use((req, res, next)=>{
     res.redirect("/html/signup.html")
 })
 
+User.hasMany(Message);
+Message.belongsTo(User);
 
 
 //sync with sequelize enries

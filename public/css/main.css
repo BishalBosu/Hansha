@@ -8,12 +8,16 @@
 
 .btn-success{
     background: linear-gradient(290deg,#095f16,rgb(61, 230, 46) 60%);
+    font-size:80%;
+    overflow: auto;
 }
 
-
+.size-auto{
+    font-size:80%;
+}
 
 .hansha-gradient-bk-top{
-    width: 50rem;
+    width: 50%;
     -webkit-text-fill-color: transparent;
     background: linear-gradient(290deg,#239721,rgb(87, 8, 104) 87.19%);
     -webkit-background-clip: text;
@@ -40,7 +44,7 @@
     background-image: url(/images/bkg2.jpg);
   
     /* Full height */
-    height: 500%;
+    height: 100%;
     
     /* Center and scale the image nicely */
     background-position: center;
@@ -50,6 +54,10 @@
 
   .message-sent{
     opacity: 100%;
+  }
+
+  body{
+    overflow: auto;
   }
 
   /* custom scrollbar */
