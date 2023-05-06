@@ -18,3 +18,13 @@ exports.postSentMessage = async (req, res, next) => {
 		res.json({ success: false })
 	}
 }
+
+exports.getAllMessage = async (req, res, next) => {
+	try {
+		const messages = await Message.findAll()
+		res.json(messages)
+	} catch (err) {
+		console.log(err)
+		res.status(500).json({ success: false, message: "Internal server error" })
+	}
+}

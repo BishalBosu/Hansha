@@ -8,8 +8,11 @@
 
 .btn-success{
     background: linear-gradient(290deg,#095f16,rgb(61, 230, 46) 60%);
-    font-size:80%;
+    /* font-size:80%; */
+    font-size-adjust:inherit;
     overflow: auto;
+    width: 80px;
+    align-items: center;
 }
 
 .size-auto{
@@ -31,7 +34,7 @@
 
     background-image: linear-gradient(to top, rgba(241, 231, 231, 0),#92db8f);
     width: 50%;
-    height: 70%;
+    height: 65%;
     position: relative; 
     left: 25%;
     overflow: auto;
@@ -39,6 +42,8 @@
 
     
 }
+
+
 .bg {
     /* The image used */
     background-image: url(/images/bkg2.jpg);
