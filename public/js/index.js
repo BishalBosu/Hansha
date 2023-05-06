@@ -9,7 +9,7 @@ async function sendMessage() {
 		try {
 			await axios.post(
 				`${BASE_URL}/message/send`,
-				{ message: message },
+				{ message: message, name: localStorage.getItem('name') },
 				{
 					headers: { Authorization: token },
 				}
@@ -25,27 +25,37 @@ async function sendMessage() {
 
 //when refreshed
 window.addEventListener("DOMContentLoaded", async () => {
-	try {
-		const token = localStorage.getItem("token");
-		const all_message_response = await axios.get(`${BASE_URL}/message/getall`, {
-			headers: { Authorization: token },
-		})
 
-		showAllMessage(all_message_response.data)
-	} catch (err) {
-		console.log("error in dom loded", err)
-	}
+setInterval(async() =>{
+
+
+		try {
+			const token = localStorage.getItem("token");
+			const all_message_response = await axios.get(`${BASE_URL}/message/getall`, {
+				headers: { Authorization: token },
+			})
+	
+			showAllMessage(all_message_response.data)
+		} catch (err) {
+			console.log("error in dom loded", err)
+		}
+
+
+
+	}, 1000)
+
+
+	
 })
 
 //utill functions
 function showAllMessage(messages) {
+	document.getElementById("chats").innerHTML = ``;
 	messages.forEach((element) => {
-		show_message(element.message)
+		show_message(element.name, element.message)
 	})
 }
 
-function show_message(message) {
-	document.getElementById("chats").innerHTML += `<tr><td>${localStorage.getItem(
-		"name"
-	)}</td><td>${message}</td></tr>`
+function show_message(name, message) {
+	document.getElementById("chats").innerHTML += `<tr><td>${name}</td><td>${message}</td></tr>`
 }

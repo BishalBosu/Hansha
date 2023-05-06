@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt")
 const User = require("../models/user")
+const Message = require("../models/message")
 const sequelize = require("../utils/database")
 const jwt = require("jsonwebtoken")
 
@@ -38,10 +39,22 @@ exports.postSignup = async (req, res, next) => {
 					},
 					{ transaction: t }
 				)
+				
 
-				await t.commit()
+				
+
+				//adding joined state
+				const msg = "joined....";				
+				await user.createMessage({
+					message: msg,
+					name: user.name
+				}, { transaction: t })
+
+				await t.commit();
+
 				res.json(user)
 			} catch (err) {
+				console.log(err)
 				await t.rollback()
 				//indicating conflict by 409
 				res

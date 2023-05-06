@@ -4,12 +4,14 @@ const sequelize = require("../utils/database")
 const jwt = require("jsonwebtoken")
 
 exports.postSentMessage = async (req, res, next) => {
-	const msg = req.body.message
+	const msg = req.body.message;
+	const name = req.body.name;
 
 	try {
 		//console.log(req.user)
 		await req.user.createMessage({
 			message: msg,
+			name: name
 		})
 
 		res.json({ sucess: true, message: "message posted successfully." })

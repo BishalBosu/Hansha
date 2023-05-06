@@ -25,9 +25,9 @@ async function registerUser() {
 	if (isValid) {
 		const name = nameInput.value
 		const email = emailInput.value
-		const phone = passInput.value
+		const phone = phoneInput.value
 		const pass = passInput.value
-		console.log(phone)
+	
 
 		obj = {
 			name,

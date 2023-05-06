@@ -10,8 +10,8 @@
     background: linear-gradient(290deg,#095f16,rgb(61, 230, 46) 60%);
     /* font-size:80%; */
     font-size-adjust:inherit;
-    overflow: auto;
-    width: 80px;
+    /* overflow: auto;
+    width: 110px; */
     align-items: center;
 }
 
