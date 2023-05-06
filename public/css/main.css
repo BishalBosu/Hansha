@@ -9,3 +9,45 @@
 .btn-success{
     background: linear-gradient(290deg,#095f16,rgb(61, 230, 46) 60%);
 }
+
+
+
+.hansha-gradient-bk-top{
+    width: 50rem;
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(290deg,#239721,rgb(87, 8, 104) 87.19%);
+    -webkit-background-clip: text;
+}
+
+.righty {
+    background-image: linear-gradient(to top, rgba(255, 0, 0, 0),#41BD3A);
+}
+
+.chat-container{
+
+    background-image: linear-gradient(to top, rgba(241, 231, 231, 0),#92db8f);
+    width: 50%;
+    height: 70%;
+    position: relative; 
+    left: 25%;
+    
+    opacity: 100%;
+
+    
+}
+.bg {
+    /* The image used */
+    background-image: url(/images/bkg2.jpg);
+  
+    /* Full height */
+    height: 500%;
+    
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .message-sent{
+    opacity: 100%;
+  }
