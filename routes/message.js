@@ -5,7 +5,12 @@ const router = express.Router();
 const messageController = require("../controllers/message")
 const authMiddleWare = require("../middlewares/auth")
 
-router.post("/message/send", authMiddleWare.authenticate, messageController.postSentMessage);
-router.get("/message/getall", authMiddleWare.authenticate, messageController.getAllMessage);
+
+//urls has filtr /message
+router.post("/send", authMiddleWare.authenticate, messageController.postSentMessage);
+
+router.get("/getall", authMiddleWare.authenticate, messageController.getAllMessage);
+
+router.get("/getnew", authMiddleWare.authenticate, messageController.getNewMessages)
 
 module.exports = router;

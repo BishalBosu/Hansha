@@ -9,13 +9,13 @@ async function sendMessage() {
 		try {
 			await axios.post(
 				`${BASE_URL}/message/send`,
-				{ message: message, name: localStorage.getItem('name') },
+				{ message: message, name: localStorage.getItem("name") },
 				{
 					headers: { Authorization: token },
 				}
 			)
 
-			show_message(message)
+			show_message(localStorage.getItem('name'), message)
 			document.getElementById("msg").value = ""
 		} catch (err) {
 			console.log(err)
@@ -23,39 +23,103 @@ async function sendMessage() {
 	}
 }
 
+async function loadAll(){
+	//FOR GETTING ALL MESSAGES
+			try {
+				const token = localStorage.getItem("token")
+				const all_message_response = await axios.get(
+					`${BASE_URL}/message/getall`,
+					{
+						headers: { Authorization: token },
+					}
+				)
+
+				localStorage.setItem("msgs", JSON.stringify(all_message_response.data))
+
+				showLocalMsgs()
+			} catch (err) {
+				console.log("error in dom loded", err)
+			}
+}
+
+
+
 //when refreshed
 window.addEventListener("DOMContentLoaded", async () => {
+	if (!localStorage.getItem("token")) {
+		window.location.href = "/html/login.html"
+	} else {
+		setInterval(async () => {
+			try {
+				const token = localStorage.getItem("token")
+				const msgs_obj = localStorage.getItem("msgs")
 
-setInterval(async() =>{
+				if (!msgs_obj) localStorage.setItem("lastId", 0)
 
+				else if (msgs_obj) {
+					const msgs_arr = JSON.parse(msgs_obj)
+					if (msgs_arr.length > 0)
+						localStorage.setItem("lastId", msgs_arr[msgs_arr.length - 1].id)
+				}
 
-		try {
-			const token = localStorage.getItem("token");
-			const all_message_response = await axios.get(`${BASE_URL}/message/getall`, {
-				headers: { Authorization: token },
-			})
-	
-			showAllMessage(all_message_response.data)
-		} catch (err) {
-			console.log("error in dom loded", err)
-		}
+				const all_message_response = await axios.get(
+					`${BASE_URL}/message/getnew?lastId=${localStorage.getItem("lastId")}`,
+					{
+						headers: { Authorization: token },
+					}
+				)
+				const msgsLen = all_message_response.data.length
+				//froms erver we get max 10 messages
+				if (msgsLen == 10 || !msgs_obj) {
+					//console.log(all_message_response.data, JSON.stringify(all_message_response.data));
+					localStorage.setItem(
+						"msgs",
+						JSON.stringify(all_message_response.data)
+					)
+				}
+				
+				//size can be 1 to 9				
+				else if (msgsLen > 0) {
+					//console.log(all_message_response.data, JSON.stringify(all_message_response.data));
+					//adding new data with old data
+					let newMsgsArr = [...JSON.parse(msgs_obj), ...all_message_response.data];
 
+					//taking only last 10 msgs
+					newMsgsArr = newMsgsArr.slice(-10)
+					localStorage.setItem(
+						"msgs",
+						JSON.stringify(newMsgsArr)
+					)
+				}
 
+				showLocalMsgs()
+			} catch (err) {
+				console.log("error in dom loded", err)
+			}
 
-	}, 1000)
-
-
-	
+			
+		}, 1000)
+	}
 })
 
-//utill functions
+//UTIL functions
 function showAllMessage(messages) {
-	document.getElementById("chats").innerHTML = ``;
+	console.log("msgs", messages)
+	document.getElementById("chats").innerHTML = ``
 	messages.forEach((element) => {
 		show_message(element.name, element.message)
 	})
 }
 
 function show_message(name, message) {
-	document.getElementById("chats").innerHTML += `<tr><td>${name}</td><td>${message}</td></tr>`
+	document.getElementById(
+		"chats"
+	).innerHTML += `<tr><td>${name}</td><td>${message}</td></tr>`
+}
+
+//util functions
+function showLocalMsgs() {
+	const msgs_obj = localStorage.getItem("msgs")
+	const msgs_arr = JSON.parse(msgs_obj)
+	showAllMessage(msgs_arr)
 }

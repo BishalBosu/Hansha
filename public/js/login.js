@@ -34,7 +34,8 @@ async function logIn() {
 			localStorage.setItem('name',decodedToken.name);		
 			
 
-			alert(`Hi! ${localStorage.getItem('name')} you have Logged in sucessfully!`)	
+			alert(`Hi! ${localStorage.getItem('name')} you have Logged in sucessfully!`)
+			
 			window.location.href = "index.html"
 
 			

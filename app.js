@@ -36,7 +36,7 @@ const accessLogStream = fs.createWriteStream(
 	
 
 app.use(cors({
-	origin: "http://localhost:3009",
+	origin: "*",
 	methods: ["GET", "POST"]
 
 }))
@@ -47,7 +47,7 @@ app.use(morgan("combined", {stream: accessLogStream}))
 
 app.use(signupRouters);
 
-app.use(messageRouters);
+app.use("/message", messageRouters);
 
 app.use((req, res, next)=>{
     res.redirect("/html/signup.html")
