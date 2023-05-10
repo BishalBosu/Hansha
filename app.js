@@ -15,12 +15,13 @@ const sequelize = require("./utils/database")
 //imported models
 const User = require("./models/user")
 const Message = require("./models/message")
+const Group = require("./models/group")
 
 
 //imported routes
 const signupRouters = require("./routes/signup");
 const messageRouters = require("./routes/message")
-
+const groupRouters = require("./routes/group")
 
 const app = express();
 
@@ -48,13 +49,20 @@ app.use(morgan("combined", {stream: accessLogStream}))
 app.use(signupRouters);
 
 app.use("/message", messageRouters);
+app.use("/group", groupRouters);
 
 app.use((req, res, next)=>{
-    res.redirect("/html/signup.html")
+    res.redirect("/html/login.html")
 })
 
 User.hasMany(Message);
 Message.belongsTo(User);
+
+User.belongsToMany(Group, { through: 'UsersGroups'})
+Group.belongsToMany(User, { through: 'UsersGroups'})
+
+Message.belongsTo(Group)
+Group.hasMany(Message)
 
 
 //sync with sequelize enries
@@ -65,4 +73,5 @@ sequelize
 		app.listen(process.env.PORT || 3009)
 	})
 	.catch((err) => console.log("DbErroRRR: ", err))
+
 

@@ -1,18 +1,23 @@
 const User = require("../models/user")
 const Message = require("../models/message")
+const Group = require("../models/group")
 const sequelize = require("../utils/database")
 const jwt = require("jsonwebtoken")
 const { Sequelize } = require("sequelize")
 
+//handle message sent with perticular group
 exports.postSentMessage = async (req, res, next) => {
 	const msg = req.body.message
 	const name = req.body.name
+	const groupId = req.body.groupid
 
 	try {
 		//console.log(req.user)
 		await req.user.createMessage({
-			message: msg,
+			messages: msg,
 			name: name,
+			groupId: groupId
+			
 		})
 
 		res.json({ sucess: true, message: "message posted successfully." })
@@ -22,9 +27,12 @@ exports.postSentMessage = async (req, res, next) => {
 	}
 }
 
+//for perticular group
 exports.getAllMessage = async (req, res, next) => {
 	try {
-		const messages = await Message.findAll()
+		const groupId = req.params.groupid;
+		const mainGroup = await Group.findByPk(groupId)
+		const messages = await mainGroup.getMessages()
 		res.json(messages)
 	} catch (err) {
 		console.log(err)

@@ -17,6 +17,7 @@
 
 		<script src="/js/base_url.js"></script>
 		<script src="/js/index.js"></script>
+		<script src="/js/group.js"></script>
 		<script src="/js/bootstrap_bundle_min.js"></script>
 
 		<script src="/js/axios_min.js"></script>
@@ -69,6 +70,14 @@
 			</div>
 		</nav>
 		<!-- navbar code end -->
+		<div class="side-bar" id="side-bar" style="height: 60%">
+			<button class="m-2 p-1 btn-side-bar">
+				<span style="height: inherit; width: inherit">Groups</span>
+			</button>
+			<div class="mx-2 px-2 create-grp" onclick="createGroup()">New Group</div><br>
+			<div id="groups-area"></div>
+			
+		</div>
 
 		<div id="main-container" class="vh-100">
 			<h1
@@ -76,6 +85,7 @@
 				style="text-align: center; position: relative; left: 20%">
 				Hansha chat app!
 			</h1>
+			<h3 id="group-name" style="text-align: center; background: linear-gradient(90deg,#49CC5C,rgb(0, 1, 0) 87.19%); color: rgb(38, 228, 38);">Free For All</h3>
 
 			<div class="chat-container" id="chat-container">
 				<table class="table table-striped">
@@ -86,18 +96,22 @@
 						</tr>
 					</thead>
 					<tbody id="chats">
-						<button type="button" class="btn" onclick="loadAll()">Load All Messagess.</button>						
+						<button type="button" id="loadall-btn" style="text-decoration-line: underline;" class="btn" onclick="loadAll(1)">
+							Load All Messagess.
+						</button>
 					</tbody>
 				</table>
 			</div>
 
 			<div class="row message-sent py-2">
 				<h5 class="size-auto px-3 mx-2 col-2">Type your message:</h5>
-				<input type="text" id="msg" class="size-auto col form-control"/>
+				<input type="text" id="msg" class="size-auto col form-control" />
 				<button
 					type="button"
-					onclick="sendMessage()"
-					class="px-3 mx-3 col-1 btn btn-success">
+					id="send-btn"
+					onclick="sendMessage(0)"
+					class="px-3 mx-3 col-1 btn btn-success"
+					style="height: inherit; width: inherit">
 					Send
 				</button>
 			</div>

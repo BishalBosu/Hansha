@@ -9,7 +9,7 @@ const authMiddleWare = require("../middlewares/auth")
 //urls has filtr /message
 router.post("/send", authMiddleWare.authenticate, messageController.postSentMessage);
 
-router.get("/getall", authMiddleWare.authenticate, messageController.getAllMessage);
+router.get("/getall/:groupid", authMiddleWare.authenticate, messageController.getAllMessage);
 
 router.get("/getnew", authMiddleWare.authenticate, messageController.getNewMessages)
 

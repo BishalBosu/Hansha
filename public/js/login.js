@@ -35,7 +35,7 @@ async function logIn() {
 			
 
 			alert(`Hi! ${localStorage.getItem('name')} you have Logged in sucessfully!`)
-			
+			localStorage.setItem("groupid", 1)
 			window.location.href = "index.html"
 
 			
