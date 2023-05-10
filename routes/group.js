@@ -12,6 +12,7 @@ router.post("/creategroup", authMiddleWare.authenticate, groupController.postCre
 router.get("/getall", authMiddleWare.authenticate, groupController.getAllGroups);
 router.get("/getgroupmessage/:groupId", authMiddleWare.authenticate, groupController.getGroupMessages);
 router.get("/getnew/groupmessage/:groupId", authMiddleWare.authenticate, groupController.getNewGroupMessages);
+router.post("/join", authMiddleWare.authenticate, groupController.postJoinGroup);
 
 
 module.exports = router;

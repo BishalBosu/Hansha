@@ -1,16 +1,21 @@
 const Group = require("../models/group")
 const Sequelize = require("sequelize")
+const { v4: uuidv4 } = require("uuid")
 
 exports.postCreateGroup = async (req, res, next) => {
 	const user = req.user
 	const gName = req.body.gName
 	const gDesc = req.body.gDesc
 
+	//generating new uuid
+	const uuid = uuidv4();
+
 	try {
 		const group = await user.createGroup({
 			group_name: gName,
 			group_description: gDesc,
 			creatorEmail: user.email,
+			join_uuid: uuid,
 		})
 
 		res.json(group)
@@ -54,9 +59,8 @@ exports.getGroupMessages = async (req, res, next) => {
 
 exports.getNewGroupMessages = async (req, res, next) => {
 	try {
-		const lastId = req.query.lastId;
-		const groupId = req.params.groupId;
-
+		const lastId = req.query.lastId
+		const groupId = req.params.groupId
 
 		const group = await Group.findByPk(groupId)
 
@@ -70,14 +74,28 @@ exports.getNewGroupMessages = async (req, res, next) => {
 		})
 
 		//sending only last 10 messages when there are more messages
-		
-		return res.json(msgs.slice(-10))
-		
 
+		return res.json(msgs.slice(-10))
 	} catch (err) {
 		console.log(err)
-		res.status(500).json({success: false, message:"Internal server error."})
-
+		res.status(500).json({ success: false, message: "Internal server error." })
 	}
+}
+
+exports.postJoinGroup = async(req, res, next)=>{
+	
+
+	try{
+		const group_uuid = req.body.uuidToJoin;
+
+		const groupToJoin = await Group.findOne({where: {join_uuid: group_uuid}})
+
+		groupToJoin.addUser(req.user)
+
+		res.json({success: true, message: `joined successfully!`, group: groupToJoin})
+	}catch(err){
+		res.status(500).json({success: false, message: "Internal error when joining"})
+	}
+
 
 }

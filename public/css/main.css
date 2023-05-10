@@ -184,3 +184,14 @@
   opacity: 1;
 }
 
+
+.join-group { 
+  color: #040905;
+  background-image: linear-gradient(290deg, rgba(255, 0, 0, 0),#41BD3A);
+  font-size: 80%;
+  opacity: 0;
+}
+
+.side-bar:hover .join-group {
+  opacity: 1;
+}

@@ -11,6 +11,7 @@
 			rel="stylesheet" />
 
 		<link rel="stylesheet" href="/css/main.css" />
+
 		<link rel="icon" href="/icons/chat-heart-fill.svg" type="image/svg" />
 
 		<title>Hansha</title>
@@ -74,9 +75,28 @@
 			<button class="m-2 p-1 btn-side-bar">
 				<span style="height: inherit; width: inherit">Groups</span>
 			</button>
-			<div class="mx-2 px-2 create-grp" onclick="createGroup()">New Group</div><br>
+			<div class="mx-2 px-2 create-grp" onclick="createGroup()">New Group</div>
+			<br />
+
+			<div class="join-group">
+				<label for="grp_name" style="color: white; width: inherit" class="m-2"
+					>Enter Join Code:</label
+				><br />
+				<input
+					type="text"
+					name="joinGroup"
+					placeholder="fasf4a-fa5sf5-afs54f"
+					class="m-2"
+					style="width: 90%; background-color: green"
+					id="g-join" /><br /><input
+					type="button"
+					onclick="joinGoup()"
+					class="btn btn-success m-3"
+					style="width: 60%"
+					value="Join" /><br>
+			</div>
+
 			<div id="groups-area"></div>
-			
 		</div>
 
 		<div id="main-container" class="vh-100">
@@ -85,7 +105,15 @@
 				style="text-align: center; position: relative; left: 20%">
 				Hansha chat app!
 			</h1>
-			<h3 id="group-name" style="text-align: center; background: linear-gradient(90deg,#49CC5C,rgb(0, 1, 0) 87.19%); color: rgb(38, 228, 38);">Free For All</h3>
+			<div
+				id="group-name"
+				style="
+					text-align: center;
+					background: linear-gradient(90deg, #49cc5c, rgb(0, 1, 0) 87.19%);
+					color: rgb(38, 228, 38);
+				">
+				Free For All
+			</div>
 
 			<div class="chat-container" id="chat-container">
 				<table class="table table-striped">
@@ -96,7 +124,12 @@
 						</tr>
 					</thead>
 					<tbody id="chats">
-						<button type="button" id="loadall-btn" style="text-decoration-line: underline;" class="btn" onclick="loadAll(1)">
+						<button
+							type="button"
+							id="loadall-btn"
+							style="text-decoration-line: underline"
+							class="btn"
+							onclick="loadAll(1)">
 							Load All Messagess.
 						</button>
 					</tbody>
@@ -109,7 +142,7 @@
 				<button
 					type="button"
 					id="send-btn"
-					onclick="sendMessage(0)"
+					onclick="sendMessage(1)"
 					class="px-3 mx-3 col-1 btn btn-success"
 					style="height: inherit; width: inherit">
 					Send

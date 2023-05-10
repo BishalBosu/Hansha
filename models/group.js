@@ -21,6 +21,10 @@ const Group  = sequelize.define('group', {
 	creatorEmail:{
 		type: Sequelize.STRING,
 		allowNull: false,
+	},
+	join_uuid:{
+		type: Sequelize.STRING,
+		allowNull: true,
 	}
     
 

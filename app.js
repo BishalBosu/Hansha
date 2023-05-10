@@ -67,7 +67,7 @@ Group.hasMany(Message)
 
 //sync with sequelize enries
 sequelize
-	.sync()
+	.sync({})
 	.then((result) => {
         //either run on PORT variable if not availavail 3006
 		app.listen(process.env.PORT || 3009)

@@ -1,4 +1,8 @@
+//creates an group and show it to the side bar
+
+//display the form to create group
 function createGroup() {
+	//saving the old element
 	const old_elem = document.getElementById("side-bar").innerHTML
 	localStorage.setItem("old_side", old_elem)
 
@@ -99,8 +103,12 @@ async function newGroup() {
 				}
 			)
 
-			console.log(groupCreated)
-			showGroup(groupCreated.data.id, groupCreated.data.group_name)
+			//console.log(groupCreated)
+			showGroup(
+				groupCreated.data.id,
+				groupCreated.data.group_name,
+				groupCreated.data.join_uuid
+			)
 		} catch (err) {
 			alert("some error in saving group!")
 			const old = localStorage.getItem("old_side")
@@ -112,53 +120,95 @@ async function newGroup() {
 	}
 }
 
-function showGroup(id, name) {
+function showGroup(id, name, join_uuid) {
 	const old = localStorage.getItem("old_side")
 	document.getElementById("side-bar").innerHTML = old
 	document.getElementById("side-bar").removeAttribute("style")
 	document.getElementById(
 		"groups-area"
-	).innerHTML += `<div class="mx-2 px-2 group-head" onclick="showGroupData(${id},'${name}')">${name}</div><br>`
+	).innerHTML += `<div class="mx-2 px-2 group-head" onclick="showGroupData(${id},'${name}', '${join_uuid}')">${name}</div><br>`
 }
 
 async function showExistingGroup() {
 	try {
 		const token = localStorage.getItem("token")
-	    const groupsResponse = await axios.get(`${BASE_URL}/group/getall`, { headers: { Authorization: token } })
-		
+		const groupsResponse = await axios.get(`${BASE_URL}/group/getall`, {
+			headers: { Authorization: token },
+		})
+
 		showAllExistingGroups(groupsResponse.data)
 	} catch (err) {
-		console.log("error in showing groups ",err)
+		console.log("error in showing groups ", err)
 	}
 }
 
-function showAllExistingGroups(groups){
-	//console.log(groups);
+function showAllExistingGroups(groups) {
+	console.log(groups)
 	//clearing the bar:
-	document.getElementById(
-		"groups-area"
-	).innerHTML = ""
+	document.getElementById("groups-area").innerHTML = ""
 
-
-	groups.forEach(element => {
+	groups.forEach((element) => {
 		//console.log(element);
 		document.getElementById(
 			"groups-area"
-		).innerHTML += `<div class="mx-2 px-2 group-head" onclick="showGroupData(${element.id}, '${element.group_name}')">${element.group_name}</div><br>`
-	});
+		).innerHTML += `<div class="mx-2 px-2 group-head" onclick="showGroupData(${element.id}, '${element.group_name}', '${element.join_uuid}')">${element.group_name}</div><br>`
+	})
 }
-
 
 //clicked on group then
 //to show group messages
-async function showGroupData(groupId, groupName){
-	localStorage.setItem("groupid", groupId);
-	localStorage.removeItem("msgs");
-	document.getElementById("group-name").innerText = groupName;
-	document.getElementById("send-btn").setAttribute("onclick", `sendMessage(${groupId})`)
-	document.getElementById("loadall-btn").setAttribute("onclick", `loadAll(${groupId})`)
+async function showGroupData(groupId, groupName, join_uuid) {
+	localStorage.setItem("groupid", groupId)
+	localStorage.removeItem("msgs")
+
+	document.getElementById("group-name").innerHTML = `<h2>${groupName}</h2>`
+	if (groupId != 1) {
+		document.getElementById(
+			"group-name"
+		).innerHTML += `<div><button style="color: #2ca913;" id= "copy-uuid-btn" class="btn" onclick="copyJoincode('${join_uuid}')">Copy Goup Join Code.</button></div>`
+	}
+	document
+		.getElementById("send-btn")
+		.setAttribute("onclick", `sendMessage(${groupId})`)
+	document
+		.getElementById("loadall-btn")
+		.setAttribute("onclick", `loadAll(${groupId})`)
+
 	//function from index.js
-	loadGroupMessages();
+	loadGroupMessages()
+}
 
+//copy join code:
+function copyJoincode(join_uuid) {
+	var dummy = document.createElement("textarea")
+	document.body.appendChild(dummy)
+	dummy.value = join_uuid
+	dummy.select()
 
+	dummy.setSelectionRange(0, 99999)
+	navigator.clipboard.writeText(dummy.value)
+
+	document.body.removeChild(dummy)
+}
+
+//Ehen join code is entred:
+async function joinGoup() {
+	try {
+		const uuidToJoin = document.getElementById("g-join").value
+		if (uuidToJoin != "") {
+			const token = localStorage.getItem("token")
+			const join_response = await axios.post(`${BASE_URL}/group/join/`, {uuidToJoin}, {
+				headers: { Authorization: token },
+			})
+
+			//console.log(join_response.data.group.id)
+			alert("You have joined the group successfully!")
+			document.getElementById(
+				"groups-area"
+			).innerHTML += `<div class="mx-2 px-2 group-head" onclick="showGroupData(${join_response.data.group.id}, '${join_response.data.group.group_name}', '${join_response.data.group.join_uuid}')">${join_response.data.group.group_name}</div><br>`
+
+		}
+	} catch (err) {
+		console.log(err)
+	}
 }
