@@ -16,6 +16,7 @@ const sequelize = require("./utils/database")
 const User = require("./models/user")
 const Message = require("./models/message")
 const Group = require("./models/group")
+const UsersGroups = require("./models/usersgroup")
 
 
 //imported routes
@@ -41,6 +42,11 @@ app.use(cors({
 	methods: ["GET", "POST"]
 
 }))
+
+
+
+
+
 //passing the middlewares
 app.use(compression());
 app.use(morgan("combined", {stream: accessLogStream}))
@@ -58,8 +64,9 @@ app.use((req, res, next)=>{
 User.hasMany(Message);
 Message.belongsTo(User);
 
-User.belongsToMany(Group, { through: 'UsersGroups'})
-Group.belongsToMany(User, { through: 'UsersGroups'})
+// Define the many-to-many relationship with the join table
+User.belongsToMany(Group, { through: UsersGroups });
+Group.belongsToMany(User, { through: UsersGroups });
 
 Message.belongsTo(Group)
 Group.hasMany(Message)
@@ -67,7 +74,7 @@ Group.hasMany(Message)
 
 //sync with sequelize enries
 sequelize
-	.sync({})
+	.sync()
 	.then((result) => {
         //either run on PORT variable if not availavail 3006
 		app.listen(process.env.PORT || 3009)

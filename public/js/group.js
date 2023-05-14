@@ -158,6 +158,10 @@ function showAllExistingGroups(groups) {
 //clicked on group then
 //to show group messages
 async function showGroupData(groupId, groupName, join_uuid) {
+	//req to join socket room with join_uuid
+	socket.emit("join-room", groupId)
+
+
 	localStorage.setItem("groupid", groupId)
 	localStorage.removeItem("msgs")
 
@@ -212,3 +216,5 @@ async function joinGoup() {
 		console.log(err)
 	}
 }
+
+

@@ -1,28 +1,52 @@
+const socket = io('http://localhost:3000')
+
 function logOut() {
 	localStorage.clear();
 	window.location.href = "/html/login.html"
 }
 
-async function sendMessage(groupId) {
-	const message = document.getElementById("msg").value
-	if (message != "") {
-		const token = localStorage.getItem("token")
-		try {
-			await axios.post(
-				`${BASE_URL}/message/send`,
-				{ message: message, name: localStorage.getItem("name"), groupid: groupId},
-				{
-					headers: { Authorization: token },
-				}
-			)
+// async function sendMessage(groupId) {
+// 	const message = document.getElementById("msg").value
+// 	if (message != "") {
+// 		const token = localStorage.getItem("token")
+// 		try {
+// 			await axios.post(
+// 				`${BASE_URL}/message/send`,
+// 				{ message: message, name: localStorage.getItem("name"), groupid: groupId},
+// 				{
+// 					headers: { Authorization: token },
+// 				}
+// 			)
 
-			show_message(localStorage.getItem('name'), message)
-			document.getElementById("msg").value = ""
-		} catch (err) {
-			console.log(err)
-		}
+// 			show_message(localStorage.getItem('name'), message)
+// 			document.getElementById("msg").value = ""
+// 		} catch (err) {
+// 			console.log(err)
+// 		}
+// 	}
+// }
+
+//with sendMessage with socket.io
+async function sendMessage(groupId) {
+	const message = document.getElementById("msg").value;
+	if (message != "") {
+	  const token = localStorage.getItem("token");
+	  try {
+		socket.emit("sendMessage", {
+		  message: message,
+		  name: localStorage.getItem("name"),
+		  groupid: groupId,
+		  token: token,		  
+		});
+  
+		show_message(localStorage.getItem("name"), message);
+		document.getElementById("msg").value = "";
+	  } catch (err) {
+		console.log(err);
+	  }
 	}
-}
+  }
+  
 
 async function loadAll(groupId){
 	//FOR GETTING ALL MESSAGES
@@ -45,14 +69,8 @@ async function loadAll(groupId){
 }
 
 //needed to load messgaes
-async function loadGroupMessages(){
-	//function from group.js
-	showExistingGroup();
-	
-
-
-	setInterval(async () => {
-		
+async function loadGroupMessages(){		
+	console.log("loading..");
 		try {
 			const groupId = localStorage.getItem("groupid")
 			const token = localStorage.getItem("token")
@@ -99,10 +117,8 @@ async function loadGroupMessages(){
 			showLocalMsgs()
 		} catch (err) {
 			console.log("error in dom loded", err)
-		}
-
-		
-	}, 1000)
+		}	
+	
 }
 
 //when refreshed
@@ -110,7 +126,19 @@ window.addEventListener("DOMContentLoaded", async () => {
 	if (!localStorage.getItem("token")) {
 		window.location.href = "/html/login.html"
 	} else {
+		//function from group.js
+		showExistingGroup();
 		loadGroupMessages();
+		socket.on("receive-message", (data)=>{
+			console.log(data.success)
+			if(data.success)
+				loadGroupMessages()
+			else{
+				alert(data.message)
+			}
+
+
+		})
 	}
 })
 
