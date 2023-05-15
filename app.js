@@ -6,8 +6,7 @@ const path = require("path")
 const fs = require("fs")
 const compression = require("compression")
 const cors = require("cors")
-
-
+var CronJob = require('cron').CronJob;
 const bodyParser = require("body-parser")
 const sequelize = require("./utils/database")
 
@@ -17,12 +16,14 @@ const User = require("./models/user")
 const Message = require("./models/message")
 const Group = require("./models/group")
 const UsersGroups = require("./models/usersgroup")
+const ArchivedChat = require("./models/archivedChat");
 
 
 //imported routes
 const signupRouters = require("./routes/signup");
 const messageRouters = require("./routes/message")
 const groupRouters = require("./routes/group")
+const { Sequelize } = require("sequelize")
 
 const app = express();
 
@@ -44,7 +45,45 @@ app.use(cors({
 }))
 
 
-
+//cron jobs to lighten the chat load
+var job = new CronJob(
+	//“At 00:00.” every day
+    '0 0 * * *',
+    async function() {
+        
+		try {
+			// Get the current date minus one day
+			const oneDayAgo = new Date();
+			oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+		
+			// Find all messages older than one day
+			const messagesToTransfer = await Message.findAll({
+			  where: {
+				createdAt: {
+				  [Sequelize.Op.lt]: oneDayAgo,
+				},
+			  },
+			});
+		
+			// Transfer messages to the ArchivedChat table
+			await ArchivedChat.bulkCreate(messagesToTransfer.map((message) => message.toJSON()));
+		
+			// Delete the transferred messages from the Chat table
+			await Message.destroy({
+			  where: {
+				id: messagesToTransfer.map((message) => message.id),
+			  },
+			});
+		
+			console.log("Message transfer completed.");
+		  } catch (error) {
+			console.error("Error transferring messages:", error);
+		  }
+    },
+    null,
+    true,
+    'Asia/Kolkata'
+);
 
 
 //passing the middlewares
@@ -74,7 +113,7 @@ Group.hasMany(Message)
 
 //sync with sequelize enries
 sequelize
-	.sync()
+	.sync({force: true})
 	.then((result) => {
         //either run on PORT variable if not availavail 3006
 		app.listen(process.env.PORT || 3009)
