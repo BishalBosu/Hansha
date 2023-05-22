@@ -107,8 +107,9 @@ Message.belongsTo(User);
 User.belongsToMany(Group, { through: UsersGroups });
 Group.belongsToMany(User, { through: UsersGroups });
 
-Message.belongsTo(Group)
-Group.hasMany(Message)
+Message.belongsTo(Group);
+Group.hasMany(Message);
+
 
 
 //sync with sequelize enries
