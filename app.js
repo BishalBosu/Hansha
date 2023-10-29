@@ -117,7 +117,7 @@ sequelize
 	.sync()
 	.then((result) => {
         //either run on PORT variable if not availavail 3006
-		app.listen(process.env.PORT || 3009)
+		app.listen(process.env.PORT || 3012)
 	})
 	.catch((err) => console.log("DbErroRRR: ", err))
 
