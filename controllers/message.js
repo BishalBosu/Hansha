@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken")
 const { Sequelize } = require("sequelize")
 
 const io = require("socket.io")(3000, {
-	cors: { origin: ["http://localhost:3009"], },
+	cors: { origin: ["https://hansha.bishalbosu.com"], },
 })
 
 //socket.io connection handling
